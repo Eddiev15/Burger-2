@@ -1,80 +1,63 @@
-// require model
+var express = require('express');
+var router = express.Router();
 var db = require('../models');
-var Burger = db.Burger;
 
-// export the routes
-module.exports = function(app) {
-    // get the root route
-    app.get('/', function(request, response) {
-        var object = {};
-        Burger.findAll({
-            where: {
-                devoured: false
-            }
-        }).then(function(result) {
-            object.uneatenBurgers = result;
-            return;
-        }).then(function() {
-          return Burger.findAll({
-              where: {
-                  devoured: true
-              }
-          });
-        }).then(function(result) {
-            object.eatenBurgers = result;
-            return;
-        }).then(function() {
-            response.render('index', {
-                uneatenBurgers: object.uneatenBurgers,
-                eatenBurgers: object.eatenBurgers
-            }); 
-        });
-    });
 
-    // define the get api/burgers route - for all burger data
-    app.get('/api/burgers', function(request, response) {
-        Burger.findAll({}).then(function(result) {
-            response.json(result);
-        });
-    });
 
-    // define post for creating a burger
-    app.post('/', function(request, response) {
-        var newBurger = request.body.burger;
-        // if no burger is defined just return
-        if (newBurger === '') {
-            response.redirect('/');
-            return;
-        }
-        // create that burger
-        Burger.create({
-            burger_name: newBurger
-        }).then(function() {
-            response.redirect('/');
-        });
-    });
+/*==================================EXPRESS ROUTES====================================*/
+router.get('/', function(req, res){
+	//retrieve all data from burgers and the temp from the temperature table
+	db.Burgers.findAll({
+		include: [db.Temperatures]
+		}).then(function(data){
+		var hbsObject = { burgers: data};
+		res.render('index', hbsObject);
+		}).catch(function(err){
+			console.log(err);
+		});
+});
 
-    // define the get api/burgers/:id route - for single burger data
-    app.get('/api/burgers/:id', function(request, response) {
-        Burger.findOne({
-            where: {
-                id: request.params.id
-            }
-        }).then(function(data) {
-            response.json(data);
-        });
-    });
+router.post('/index/create', function(req, res){
+	//create burger
+	db.Burgers.create({
+			burger_name: req.body.burger_name,
+		}).then(function(data){
+			console.log("added burger");
+			res.redirect('/');
+		}).catch(function(err){
+			console.log(err);
+		});
+});
 
-    // define put for updating a burger
-    app.put('/:id', function(request, response) {
-        Burger.update({
-            devoured: true
-        }, {
-            where: {
-                id: request.params.id
-            }
-        }).then(function() {
-            response.redirect('/');
-        });
-    });
-};
+router.put('/index/update/:id', function(req, res){
+	//update Temperatures table and burgers table
+	db.Temperatures.create({
+		temp: req.body.temp,
+		burger_id: req.params.id
+	}, {
+		where: {id : req.params.id}
+	}).then(function(data){
+		console.log("temp updated: " + req.body.temp);
+	}).catch(function(err){
+		console.log(err);
+	});
+
+	db.Burgers.update({
+			devoured: 1,
+			burger_id: req.params.id
+		},
+		{
+			where: {id : req.params.id}
+		}).then(function(data){
+			res.redirect('/');
+		}).catch(function(err){
+			console.log(err);
+		});
+	
+});
+
+/*==================================END EXPRESS ROUTES====================================*/
+
+
+//export router to be required in server.js
+module.exports = router;

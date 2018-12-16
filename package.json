@@ -1,0 +1,30 @@
+{
+  "name": "burger",
+  "version": "1.0.0",
+  "description": "burger logger with MySQL, Node, Express, Handlebars and a homemade ORM ",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rdotchin/burger.git"
+  },
+  "author": "Richard Dotchin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rdotchin/burger/issues"
+  },
+  "homepage": "https://github.com/rdotchin/burger#readme",
+  "dependencies": {
+    "body-parser": "^1.16.0",
+    "express": "^4.14.0",
+    "express-handlebars": "^3.0.0",
+    "method-override": "^2.3.7",
+    "mysql": "^2.12.0",
+    "sequelize": "^3.30.1"
+  },
+  "jshintConfig": {
+    "esversion": "6"
+  }
+}

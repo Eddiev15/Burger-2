@@ -1,34 +1,63 @@
-<div class="row">
-    <div class="col-xs-6">
-        <ul class="list-group">
-            {{#each uneatenBurgers}}
-                <li class="list-group-item">
-                    {{ id }}. {{ burger_name }}
-                    <button type="submit" form="hidden-form{{id}}" class="btn btn-primary btn-sm pull-right devour">Devour it!</button>
-                </li>
-                <form action="/{{id}}?_method=PUT" method="POST" id="hidden-form{{id}}" class="hidden-xs-up"></form>
-            {{/each}}
-        </ul>
-    </div>
+<div class="container">
 
-    <div class="col-xs-6">
-        <ul class="list-group">
-            {{#each eatenBurgers}}
-                <li class="list-group-item">{{ id }}. {{ burger_name }}</li>
-            {{/each}}
-        </ul>
-    </div>
-</div>
+	<div class="row" id="image-row">
+		<div class="col-md-12" id="image-col">
+			{{!-- public folder is static --}}
+			<img src="/assets/img/burger.png" id="burger-image">
+			<h1>Eat-Da-Burger</h1>
+		</div>
+	</div>
+	{{!-- list of uneaten burgers --}}
+	<div class="row" id="burgers-div">
+		<div class="col-md-4" id="burgers">
+			<ul class="list-group">
+				{{#each burgers}}
+					{{#unless this.devoured}}
+						<li class="list-group-item">
+							{{this.id}}. {{this.burger_name}}
 
-<div class="row text-center">
-    <h2>Eat Me - Eat Me</h2>
+							<form action="index/update/{{this.id}}?_method=PUT" method="POST" class="button-size">
+										<select class="chosen-select" id="dropdown" name="temp">
+											<option value></option>
+											<option value="rare">rare</option>
+											<option value="medium rare">medium rare</option>
+											<option value="medium">medium</option>
+											<option value="medium well">medium well</option>
+											<option value="well done">well done</option>
+										</select>
+										<input type="hidden" name="devour" value="1">
+										<button type="submit">Devour It!</button>
+								</form>
 
-    <form method="POST" action="/" class="form">
-        <div class="form-group">
-            <input type="text" name="burger" class="form-control"></input>
-        </div>
-        <button type="submit" class="btn btn-success btn-block">Submit</button>
-        <br>
-        <p>Enter a burger you want to eat then click the "Submit" button.</p>
-    </form>
-</div>
+							
+						</li>
+					{{/unless}}
+				{{/each}}
+			</ul>
+		</div>
+		
+		<div class="col-md-4"></div>
+
+		<div class="col-md-4" id="eaten-burgers">
+			<ul class="list-group">
+				{{#each burgers}}
+					{{#if this.devoured}}
+						<li class="list-group-item" id="eaten-burger-li">
+								{{this.id}}. {{this.burger_name}} - {{this.Temperature.temp}}
+						</li>
+					{{/if}}
+				{{/each}}
+			</ul>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-12">
+			<form class="create-update-form" method="POST" action="index/create">
+				<textarea class="form-control" id="burger-text-area" type="text" name="burger_name" placeholder="enter new burger here"></textarea>
+				<button type="submit" id="new-burger-button">Submit</button>
+			</form>
+		</div>
+	</div>
+
+</div> {{!-- end of container div --}}
