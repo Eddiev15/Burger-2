@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rdotchin/burger.git"
+    "url": "git+https://github.com/eddiev15/burger.git"
   },
-  "author": "Richard Dotchin",
+  "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/rdotchin/burger/issues"
+    "url": "https://github.com/eddiev15/burger/issues"
   },
-  "homepage": "https://github.com/rdotchin/burger#readme",
+  "homepage": "https://github.com/eddiev15/burger#readme",
   "dependencies": {
     "body-parser": "^1.16.0",
     "express": "^4.14.0",
